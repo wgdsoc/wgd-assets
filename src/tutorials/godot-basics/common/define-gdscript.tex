@@ -1,0 +1,39 @@
+\lstdefinestyle{code}{
+	basicstyle=\ttfamily\footnotesize\bfseries,
+	breakatwhitespace=false,
+	captionpos=b,
+	keepspaces=true,
+	numbers=left,
+	numbersep=6pt,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=4
+}
+
+\lstset{
+	style=code,
+	framexleftmargin=5.0mm,
+	frame=shadowbox,
+	rulesepcolor=\color{black},
+	xleftmargin=12pt,
+	aboveskip=12pt,
+	belowskip=12pt
+}
+
+\lstdefinelanguage{gdscript}{
+	keywords=[1]{func, const, not, or, and, var, is, extends},
+	morekeywords=[2]{if, elif, else, match},
+	morekeywords=[3]{Input, CharacterBody2D, AnimatableBody2D, Vector2, Node2D, Node, RigidBody2D},
+	morekeywords=[4]{float, void, int, String},
+	morekeywords=[5]{velocity, x, y, position, rotation, linear_velocity},
+	sensitive=true,
+	morecomment=[l]{\#},
+	keywordstyle=[1]\color{WildStrawberry},
+	keywordstyle=[2]\color{Thistle},
+	keywordstyle=[3]\color{SeaGreen},
+	keywordstyle=[4]\color{Green},
+	keywordstyle=[5]\color{SkyBlue},
+	stringstyle=\color{Yellow},
+	commentstyle=\color{Gray},
+}

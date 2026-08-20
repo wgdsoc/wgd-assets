@@ -1,0 +1,8 @@
+digraph G {
+	node [shape=rect]
+	graph [layout=dot rankdir=LR]
+
+	press [label="Press [space, up, W]"]
+	respond [label="Jump [velocity.y = N]"]
+	press -> respond
+}

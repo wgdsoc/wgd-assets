@@ -3,3 +3,7 @@
 !.gitignore
 
 !*.tex
+!*.gv
+!*.bib
+!*.latexmkrc
+!*.md
