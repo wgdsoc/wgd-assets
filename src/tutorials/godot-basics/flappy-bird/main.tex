@@ -164,11 +164,11 @@ func _physics_process(delta: float) -> void:
 
 As you might note once you've run the game a few times, the controls don't exactly match the original's. You can't flap, you can move side-to-side relative to the camera with the arrow keys, and the bird drops rather quickly.
 
-The reasons for these issues become apparent when you examine the code. Line \encircle{10} asks if the bird \emph{is not} on the floor. If this statement evaluates to true, then the indented line \encircle{11} is carried out, applying gravity to the bird. These lines are acceptable: the only time we might expect the bird to `land' is on a pipe, which would end the game anyway.
+The first few lines of code are acceptable. Line \encircle{10} asks if the bird \emph{is not} on the floor. If this statement evaluates to true, then the indented line \encircle{11} is carried out, applying gravity to the bird. These lines are acceptable because the only places we might expect the bird to `land' are the ground or a pipe, which would end the game anyway.
 
-The next lines present the first of our gameplay difficulties. The `jump' requires both that `$ui\_accept$' (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. To solve this, simply remove the requirement that the CharacterBody2D `$is\_on\_floor$.'
+The next lines present the first of our gameplay difficulties. The `jump' requires both that `ui\_accept' (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. To solve this, simply remove the requirement that the CharacterBody2D `is\_on\_floor.'
 
-To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on `$ui\_left$' and `$ui\_right$', left- and right-arrow.
+To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on `ui\_left' and `ui\_right', left- and right-arrow.
 
 \begin{lstlisting}[language=gdscript, label={lst:simplified-controller}, caption=Inputs to suit flappy bird]
 # ---- // SNIP // ---- #
@@ -184,6 +184,10 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 \end{lstlisting}
+
+\begin{callout-note}{An aside on `delta'}
+Say someone who plays your game in the future has a really bad computer (or your game is very complex). It is possible that their computer won't be able to keep up with the \_physics\_process function being called sixty times a second. The game would appear to move in slow-motion. Delta is how much time has passed since \_physics\_process was last called. Normally, delta would be 0.01667, but if a computer can only manage thirty per second, delta changes to 0.03333. This adjusts for any lag or slowdown.
+\end{callout-note}
 
 \newpage
 \bibliographystyle{plainurl}

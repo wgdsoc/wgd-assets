@@ -1,6 +1,6 @@
 digraph G {
 	node [shape=rect]
-	graph [layout=dot rankdir=LR]
+	graph [layout=dot rankdir=LR dpi=250]
 
 	press [label="Press [space, up, W]"]
 	respond [label="Jump [velocity.y = N]"]
