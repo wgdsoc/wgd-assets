@@ -23,7 +23,7 @@
 
 \section{Origins}
 \subsection*{The Engine}
-The Godot Game Engine was released to the public on the 14\textsuperscript{th} of January 2014, with the ambitious aim ``to become the most amazing game engine the world has ever seen!''.\cite{first-public-release-godot} Godot is MIT-licensed; you receive permanent ownership, editing and redistribution rights when you download it.
+The Godot Game Engine was released to the public on the 14\textsuperscript{th} of January 2014, with the ambitious aim ``to become the most amazing game engine the world has ever seen!''.\cite{first-public-release-godot} Godot is MIT-licensed; you receive permanent ownership, editing and redistribution rights when you download the engine.
 
 \subsection*{The Game}
 Flappy Bird was developed in under a week by Dong Nguyen, a solo indie developer. By 2014, he was earning over \$50,000 every day in advertisement revenue. On the 9\textsuperscript{th} of February, just five days before the first public release of Godot, Flappy Bird was taken down. The developer cited personal fears over the game's addictive nature and increased stress over intense media attention.\cite{flappy-bird-creator-speaks-out} A 2024 reboot was launched to critical failure\cite{flappy-bird-reboot-techradar}\cite{flappy-bird-trademark-vultures} -- can you do better than the remake?
@@ -79,7 +79,7 @@ In Godot, games are composed of `nodes'. A node might constitute an entire level
   \item[--] CollisionShape2D (hitbox for collision)
 \end{itemize}
 
-Scenes exist in the editor to enable structuring and blueprinting. Scenes can be `instantiated' (cloned into different contexts) so that game logic can be reused when necessary. For example, a level in a racing game would need to be instantiated every time the player wanted to drive that track. After instantiation, Godot can the level's root node as a branch to the rest of the node tree. For example, the Minecraft clone may have the structure:
+Scenes exist in the editor to enable structuring and blueprinting. Scenes can be `instantiated' (cloned into different contexts) so that game logic can be reused when necessary. For example, a level in a racing game would need to be instantiated every time the player wanted to drive that track. Instantiation is vital in many circumstances. For example, the Minecraft clone may have the structure:
 \begin{itemize}
   \item[--] Main (contains, manages: the entire game)
   \begin{itemize}
@@ -88,9 +88,11 @@ Scenes exist in the editor to enable structuring and blueprinting. Scenes can be
   \end{itemize}
 \end{itemize}
 
-The `mobs' subnode may itself have subnodes corresponding to skeletons, zombies, and others. These have their own subnodes, as discussed above. Every Godot game is simply a node tree of some sort.
+The `mobs' subnode may itself have subnodes, corresponding to skeletons, zombies and others, each of which will need to be instantiated. These have their own subnodes, as discussed above. Every Godot game is simply a node tree of some sort.
 
 \subsection*{The Bird}
+With that out of the way, we can return to the editor and start with creating the main character of flappy bird, the bird!
+
 A scene needs to be created for the bird so we can instantiate it elsewhere. The scene tree panel in the top-left of the editor requires that we ``create [a] root node''. A CharacterBody2D node will give the bird some properties we want, including gravity, velocity and physics interactions. Select `other node' and search for this name. For confirmation that everything is working correctly, see \prettyref{fig}{fig:select-character-body}. Hit create.
 
 \textimage{select-character-body}{0.9\textwidth}{Selecting the CharacterBody2D}{fig:select-character-body}
@@ -107,18 +109,20 @@ Read it and weep! The joys of game design have only just begun. Fortunately, God
 A shape must be provided for CollisionShape2D to function. Please create a shape resource for it!
 \end{callout-warning}
 
-This error description is a little less verbose, but is easy enough to solve. Select the CollisionShape2D. The node property inspector \prettyref{fig}{fig:collision-shape-properties}, on the right side of the editor, is now telling us about the internals of the CollisionShape2D node. Unsurprisingly, the `shape' property is empty. Click on `$<$empty$>$' (not the folder-lightning symbol, that does something else), and set the shape to whichever one of [circle, rectangle, capsule] you think best represents a bird. If you change your mind, hit the anti-clockwise `recycle' button which pops up once the property has been set.
+This error description is a little less verbose, but the underlying problem is easy enough to solve. Select the CollisionShape2D. The node property inspector \prettyref{fig}{fig:collision-shape-properties}, on the right side of the editor, is now telling us about the internals of the CollisionShape2D node. Unsurprisingly, the `shape' property is empty.
+
+Click on `$<$empty$>$' (not the folder-lightning symbol, that does something else), and set the shape to whichever one of [circle, rectangle, capsule] you think best represents a bird. If you change your mind, hit the anti-clockwise `recycle' button which pops up once the property has been set.
 
 \textimage{collision-shape-properties}{0.5\textwidth}{The collision shape property tab}{fig:collision-shape-properties}
 
-The central editor window should show a tiny blue shape. For now, so that the bird is visible without a sprite (image), open the `debug' menu at the top-left, and toggle on `visible collision shapes'. Save the scene with ctrl+s (cmd+s for macOS) and name it bird.tscn or something similar. Run the current scene with the `\href{https://en.wikipedia.org/wiki/Clapperboard}{clapperboard}' button at the top-right of the editor. A popup window should appear with a grey screen, except for a little blue shape in the top-left corner. That's the bird!
+The central editor window should show a tiny blue shape. For now, so that the bird is visible in-game without a sprite (image), open the `debug' menu at the top-left, and toggle on `visible collision shapes'. Save the scene with ctrl+s (cmd+s for macOS) and name it bird.tscn or something similar. Run the current scene with the `\href{https://en.wikipedia.org/wiki/Clapperboard}{clapperboard}' button at the top-right of the editor. A popup window should appear with a grey screen, except for a little blue shape in the top-left corner. That's the bird!
 
 There is still much to implement for the game to even remotely resemble flappy bird:
 \begin{itemize}
   \item[--] Gravity
-  \item[--] Flapping
   \item[--] Movement
   \item[--] Obstacles
+  \item[--] The eponymous flapping
 \end{itemize}
 
 \newpage
@@ -129,7 +133,7 @@ What is a character controller? A character controller takes input from the user
 \textimage[]{flapping-flowchart}{0.7\textwidth}{A flapping flowchart}{fig:flapping-flowchart}
 
 \subsection*{Application}
-To realise this flowchart, you'll need some code. In Godot, a script can be attached to a node so that it can take actions based on inputs (from the player or otherwise). In our instance, we want to attach a script to the CharacterBody2D node. Right-click the node in the scene tree and hit `attach script' in the menu. Ensure that the `template' box is checked and the drop-down set to `CharacterBody2D: Basic Movement'. You should see code as in \prettyref{lst}{lst:the-template-script}.
+To realise this flowchart, you'll need some code. In Godot, a script can be attached to a node so that it can take actions based on inputs (from the player or other scripts). In our instance, we want to attach a script to the CharacterBody2D node. Right-click the node in the scene tree and hit `attach script' in the menu. Ensure that the `template' box is checked and the drop-down set to `CharacterBody2D: Basic Movement'. You should see code as in \prettyref{lst}{lst:the-template-script}.
 
 \begin{lstlisting}[language=gdscript, label={lst:the-template-script}, caption=The template script]
 extends CharacterBody2D
@@ -162,11 +166,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 \end{lstlisting}
 
-As you might note once you've run the game a few times, the controls don't exactly match the original's. You can't flap, you can move side-to-side relative to the camera with the arrow keys, and the bird drops rather quickly.
+As you might note once you've run the game a few times, the controls don't exactly match the original's. You can't flap, you can move side-to-side relative to the camera with the arrow keys, and the bird drops rather quickly. It's worth analysing the code line-by-line.
 
 The first few lines of code are acceptable. Line \encircle{10} asks if the bird \emph{is not} on the floor. If this statement evaluates to true, then the indented line \encircle{11} is carried out, applying gravity to the bird. These lines are acceptable because the only places we might expect the bird to `land' are the ground or a pipe, which would end the game anyway.
 
-The next lines present the first of our gameplay difficulties. The `jump' requires both that `ui\_accept' (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. To solve this, simply remove the requirement that the CharacterBody2D `is\_on\_floor.'
+The next lines present the first of our gameplay difficulties. The `jump' requires both that `ui\_accept' (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. The bird should be able to `jump' at any time. To solve this, simply remove the requirement that the CharacterBody2D `is\_on\_floor.'
 
 To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on `ui\_left' and `ui\_right', left- and right-arrow.
 
@@ -186,8 +190,11 @@ func _physics_process(delta: float) -> void:
 \end{lstlisting}
 
 \begin{callout-note}{An aside on `delta'}
-Say someone who plays your game in the future has a really bad computer (or your game is very complex). It is possible that their computer won't be able to keep up with the \_physics\_process function being called sixty times a second. The game would appear to move in slow-motion. Delta is how much time has passed since \_physics\_process was last called. Normally, delta would be 0.01667, but if a computer can only manage thirty per second, delta changes to 0.03333. This adjusts for any lag or slowdown.
+Delta is how much time has passed since \_physics\_process was last called. On low-spec computers or in complex games, the program may not be able to execute at sixty frames-per-second. To account for this, delta increases and reduces as such: $delta=\frac{1}{FPS}$. Then, as in \encircle{6}, delta can be multiplied by variables which contribute to movement to.
 \end{callout-note}
+
+\subsection*{Parameterisation}
+
 
 \newpage
 \bibliographystyle{plainurl}
