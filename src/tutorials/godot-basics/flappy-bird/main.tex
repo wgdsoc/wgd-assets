@@ -23,7 +23,7 @@
 
 \section{Origins}
 \subsection*{The Engine}
-The Godot Game Engine was released to the public on the 14\textsuperscript{th} of January 2014, with the ambitious aim ``to become the most amazing game engine the world has ever seen!''.\cite{first-public-release-godot} Godot is MIT-licensed; you receive permanent ownership, editing and redistribution rights when you download the engine.
+The Godot Game Engine was released to the public on the 14\textsuperscript{th} of January 2014, with the ambitious aim ``to become the most amazing game engine the world has ever seen!''\cite{first-public-release-godot} Godot is MIT-licensed; you receive permanent ownership, editing and redistribution rights when you download the engine.
 
 \subsection*{The Game}
 Flappy Bird was developed in under a week by Dong Nguyen, a solo indie developer. By 2014, he was earning over \$50,000 every day in advertisement revenue. On the 9\textsuperscript{th} of February, just five days before the first public release of Godot, Flappy Bird was taken down. The developer cited personal fears over the game's addictive nature and increased stress over intense media attention.\cite{flappy-bird-creator-speaks-out} A 2024 reboot was launched to critical failure\cite{flappy-bird-reboot-techradar}\cite{flappy-bird-trademark-vultures} -- can you do better than the remake?
@@ -49,12 +49,12 @@ These questions will be key to designing your own game in the future. Rephrased,
   \item[--] Does the core mechanic feel good to use?
 \end{itemize}
 
-\newpage
+\clearpage
 \section{Godot Orientation}
 \subsection*{Projects}
 Godot opens to the project manager which lists your projects and provides project creation / import functionality. You may not have created any projects for the manager to list, so you need a new one to start developing. The project creation window \prettyref{fig}{fig:project-creation-window} is a form through which you tell Godot some general information about what it should expect from your game.
 
-\textimage{project-creation-window.png}{0.6\textwidth}{The project creation window}{fig:project-creation-window}
+\textimage{project-creation-window}{0.6\textwidth}{The project creation window}{fig:project-creation-window}
 
 Name the project as you wish and place the project in an empty path (folder) of your choice. I have set the renderer option to `Forward+' mode because my computer is reasonably powerful. Compatibility mode can provide a much better experience on some computers -- see \href{https://docs.godotengine.org/en/stable/tutorials/rendering/renderers.html}{here} for more detail. If you have experience in Git you can select it in the version control metadata drop-down; Godot will provide you with a preconfigured gitginore file. Make sure that `Edit Now' is ticked and, when you're ready, hit create.
 
@@ -69,10 +69,10 @@ Everything should look fairly empty at the moment. Just a reminder: if at any po
 
 \textimage{editor-view}{0.9\textwidth}{Godot's editor}{fig:editor-view}
 
-\newpage
+\clearpage
 \section{Nodes and Scenes}
 \subsection*{Definitions}
-In Godot, games are composed of `nodes'. A node might constitute an entire level in your platformer, an enemy in your RPG, or a card in your Balatro clone. Nodes can contain other nodes; the player character in a 2D Minecraft clone might have the subnodes:
+In Godot, games are composed of `nodes.' A node might constitute an entire level in your platformer, an enemy in your RPG, or a card in your Balatro clone. Nodes can contain other nodes; the player character in a 2D Minecraft clone might have the subnodes:
 \begin{itemize}
   \item[--] Sprite2D (displays an image)
   \item[--] Inventory (container of items)
@@ -93,7 +93,7 @@ The `mobs' subnode may itself have subnodes, corresponding to skeletons, zombies
 \subsection*{The Bird}
 With that out of the way, we can return to the editor and start with creating the main character of flappy bird, the bird!
 
-A scene needs to be created for the bird so we can instantiate it elsewhere. The scene tree panel in the top-left of the editor requires that we ``create [a] root node''. A CharacterBody2D node will give the bird some properties we want, including gravity, velocity and physics interactions. Select `other node' and search for this name. For confirmation that everything is working correctly, see \prettyref{fig}{fig:select-character-body}. Hit create.
+A scene needs to be created for the bird so we can instantiate it elsewhere. The scene tree panel in the top-left of the editor requires that we ``create [a] root node.'' A CharacterBody2D node will give the bird some properties we want, including gravity, velocity and physics interactions. Select `other node' and search for this name. For confirmation that everything is working correctly, see \prettyref{fig}{fig:select-character-body}. Hit create.
 
 \textimage{select-character-body}{0.9\textwidth}{Selecting the CharacterBody2D}{fig:select-character-body}
 
@@ -103,7 +103,7 @@ Possibly the first error of your Godot career has popped-up next to the Characte
 This node has no shape, so it can't collide or interact with other objects. Consider adding a CollisionShape2D or CollisionPolygon2D as a child to define its shape.
 \end{callout-warning}
 
-Read it and weep! The joys of game design have only just begun. Fortunately, Godot is being rather transparent about what the problem is in this situation: the CharacterBody2D wants to know the size of its collision box, and you haven't even given it one. Right-click on the node and hit `add child node'. Search for a CollisionShape2D, and add it. Unfortunately, like a slightly irritating game of whack-a-mole (can whack-a-mole be not-irritating?), a new warning has appeared next to the new node.
+Read it and weep! The joys of game design have only just begun. Fortunately, Godot is being rather transparent about what the problem is in this situation: the CharacterBody2D wants to know the size of its collision box, and you haven't even given it one. Right-click on the node and hit `add child node.' Search for a CollisionShape2D, and add it. Unfortunately, like a slightly irritating game of whack-a-mole (can whack-a-mole be not-irritating?), a new warning has appeared next to the new node.
 
 \begin{callout-warning}{CollisionShape2D Warning}
 A shape must be provided for CollisionShape2D to function. Please create a shape resource for it!
@@ -115,17 +115,17 @@ Click on `$<$empty$>$' (not the folder-lightning symbol, that does something els
 
 \textimage{collision-shape-properties}{0.5\textwidth}{The collision shape property tab}{fig:collision-shape-properties}
 
-The central editor window should show a tiny blue shape. For now, so that the bird is visible in-game without a sprite (image), open the `debug' menu at the top-left, and toggle on `visible collision shapes'. Save the scene with ctrl+s (cmd+s for macOS) and name it bird.tscn or something similar. Run the current scene with the `\href{https://en.wikipedia.org/wiki/Clapperboard}{clapperboard}' button at the top-right of the editor. A popup window should appear with a grey screen, except for a little blue shape in the top-left corner. That's the bird!
+The central editor window should show a tiny blue shape. For now, so that the bird is visible in-game without a sprite (image), open the `debug' menu at the top-left, and toggle on `visible collision shapes.' Save the scene with ctrl+s (cmd+s for macOS) and name it bird.tscn or something similar. Run the current scene with the `\href{https://en.wikipedia.org/wiki/Clapperboard}{clapperboard}' button at the top-right of the editor. A popup window should appear with a grey screen, except for a little blue shape in the top-left corner. That's the bird!
 
 There is still much to implement for the game to even remotely resemble flappy bird:
 \begin{itemize}
   \item[--] Gravity
-  \item[--] Movement
   \item[--] Obstacles
+  \item[--] Movement
   \item[--] The eponymous flapping
 \end{itemize}
 
-\newpage
+\clearpage
 \section{Character Controller}
 \subsection*{Definition}
 What is a character controller? A character controller takes input from the user and translates it into action in the game. Flappy bird has exactly one input: flap. When the player presses flap the bird `jumps' in midair; its vertical speed is set to some value. Intricate character controllers would need an elaborate graph, but we simply require \prettyref{fig}{fig:flapping-flowchart}.
@@ -133,7 +133,7 @@ What is a character controller? A character controller takes input from the user
 \textimage[]{flapping-flowchart}{0.7\textwidth}{A flapping flowchart}{fig:flapping-flowchart}
 
 \subsection*{Application}
-To realise this flowchart, you'll need some code. In Godot, a script can be attached to a node so that it can take actions based on inputs (from the player or other scripts). In our instance, we want to attach a script to the CharacterBody2D node. Right-click the node in the scene tree and hit `attach script' in the menu. Ensure that the `template' box is checked and the drop-down set to `CharacterBody2D: Basic Movement'. You should see code as in \prettyref{lst}{lst:the-template-script}.
+To realise this flowchart, you'll need some code. In Godot, a script can be attached to a node so that it can take actions based on inputs (from the player or other scripts). In our instance, we want to attach a script to the CharacterBody2D node. Right-click the node in the scene tree and hit `attach script' in the menu. Ensure that the `template' box is checked and the drop-down set to `CharacterBody2D: Basic Movement.' You should see code as in \prettyref{lst}{lst:the-template-script}.
 
 \begin{lstlisting}[language=gdscript, label={lst:the-template-script}, caption=The template script]
 extends CharacterBody2D
@@ -172,7 +172,7 @@ The first few lines of code are acceptable. Line \encircle{10} asks if the bird 
 
 The next lines present the first of our gameplay difficulties. The `jump' requires both that `ui\_accept' (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. The bird should be able to `jump' at any time. To solve this, simply remove the requirement that the CharacterBody2D `is\_on\_floor.'
 
-To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on `ui\_left' and `ui\_right', left- and right-arrow.
+To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on `ui\_left' and `ui\_right,' left- and right-arrow.
 
 \begin{lstlisting}[language=gdscript, label={lst:simplified-controller}, caption=Inputs to suit flappy bird]
 # ---- // SNIP // ---- #
@@ -183,7 +183,7 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept")
+	if Input.is_action_just_pressed("ui_accept"):
 		velocity.y = JUMP_VELOCITY
 
 	move_and_slide()
@@ -193,10 +193,81 @@ func _physics_process(delta: float) -> void:
 Delta is how much time has passed since \_physics\_process was last called. On low-spec computers or in complex games, the program may not be able to execute at sixty frames-per-second. To account for this, delta increases and reduces as such: $delta=\frac{1}{FPS}$. Then, as in \encircle{6}, delta can be multiplied by variables which contribute to movement to.
 \end{callout-note}
 
-\subsection*{Parameterisation}
+\subsection*{Parameters}
+There are two parameters which define the movement of the bird. They are `Default Gravity,' and `JUMP\_VELOCITY.' Adjust jumping in your code, and the gravity parameter in Project $\rightarrow$ Project Settings $\rightarrow$ search `gravity.' Test how these affect each other, optimise them as you wish for fun gameplay!
+
+\clearpage
+\section{Obstacles}
+\subsection*{The Aim}
+The obstacles in flappy bird move across the screen right-to-left. They are composed of two vertical strips (the pipes) with a gap in-between. The game ends if the bird hits either collision box. When the bird passes through the gap successfully, the player gains a point.
+
+\begin{callout-note}{Setting an aim}
+It is often very helpful to set strict aims when designing subsystems in games. The above paragraph is a good example.
+\end{callout-note}
+
+Obstacles need to be instantiated (spawned) when they enter the screen and freed (despawned) when they leave. Thus, we need a new scene. Hit the plus icon on the top tab bar next to the bird scene and switch back to the 2D view.
+
+\subsection*{The Pipes}
+The most appropriate node for this purpose is the `AnimatableBody2D,' because it is not affected by gravity or external collisions. Add it as the root node of the new scene. Ensure that it's `Sync to Physics' property is switched \emph{off}.
+
+\begin{callout-warning}{CharacterBody2D Warning}
+This node has no shape, so it can't collide or interact with other objects. Consider adding a CollisionShape2D or CollisionPolygon2D as a child to define its shape.
+\end{callout-warning}
+
+The warning returns! It's up to you now. Consider this a miniature test. Don't worry if you can't work it out, my work is in the figures below. Hints: multiple CollisionShape2Ds can be attached to one Body2D. They can be moved in the transform tab in the properties inspector, \prettyref{fig}{fig:collision-shape-properties}.
+
+\textimage{top-collisionshape}{\textwidth}{The `top' CollisionShape2D}{fig:top-collision-node}
+\textimage{bottom-collisionshape}{\textwidth}{The `bottom' CollisionShape2D}{fig:bottom-collision-node}
+\clearpage
+
+\begin{callout-note}{Copy-pasting nodes}
+When you copy a node and paste it elsewhere, nodal properties are conveniently carried across. However, if you subsequently modify resources within the new node (e.g., change the size of a Shape2D), any change will be replicated in the original because they share this resource. Make the resource `unique' to the new node by hitting the toolbar icon (top-left of the property inspector) $\rightarrow$ Make Sub-Resources Unique. Now the nodes won't affect each other.
+\end{callout-note}
+
+Note that the top and bottom CollisionShape2Ds are placed relative to the AnimatableBody2D (which is at 0, 0). This means that obstacles can be spawned anywhere to challenge the player.
+
+\clearpage
+\section{The Main Scene}
+\subsection*{Bird Placement}
+Create a new scene with a simple Node2D as the root. The viewport is the purple rectangle. Drag and drop the `bird.tscn' file from the FileSystem, \prettyref{fig}{fig:filesystem-birdscene}. The bird should be placed at the center-left of the viewport to give the player some time to react to the obstacles.
+
+\textimage{filesystem-birdscene}{0.6\textwidth}{See bird.tscn in the FileSystem}{fig:filesystem-birdscene}
+
+Add in the obstacles, ... and nothing moves. But what should move? This is an interesting question; think about it for yourself.
+
+\clearpage
+\subsection*{Movement}
+The bird seems obvious, right? Wrong. If the player and camera move rightwards, and the obstacles are static, we need to write movement code for both. Instead, we can just move the obstacles left. Thus, like a conveyor belt across the screen, we add and remove them at both ends. See \prettyref{fig}{fig:obstacle-flowchart} for a more detailed plan.
+
+\textimage[]{obstacle-flowchart}{\textwidth}{A logic flowchart for obstacle behaviour}{fig:obstacle-flowchart}
+
+We need just two more scripts for a fully functional game! The first is the actual obstacle movement. It will be instantiated by the main scene; it only needs to move and delete itself once off-screen. Return to the obstacle scene in the top tab bar and attach a new script to the AnimatableBody2D.
+
+Much like the bird script, our code should go in the function we used before: \_physics\_process. If you are confident enough, try it yourself. Investigate the \href{https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-queue-free}{queue\_free} and \href{https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html#move-and-collide}{move\_and\_collide} functions for advice on implementation details.
+
+Find my version below.
+
+\clearpage
+\begin{lstlisting}[language=gdscript, label={lst:the-template-script}, caption=The template script]
+extends AnimatableBody2D
 
 
-\newpage
+const SPEED = 100
+
+
+func _physics_process(delta: float) -> void:
+	if position.x < -100:
+		print("Obstacle despawned.")
+		queue_free()
+	
+	move_and_collide(Vector2(-SPEED, 0) * delta)
+\end{lstlisting}
+
+Line \encircle{8} does the check as per the flowchart. Lines \encircle{9} and \encircle{10} are indented and thus carried out if the query returns true. Line \encircle{9} prints a message to the console, which pops up below the editor viewport when you run the game. \encircle{12} runs every physics tick and tells the AnimatableBody2D to move\_and\_collide at SPEED. Drag and drop a couple of obstacles into the main scene. The game should work!
+
+There's just one thing left: 
+
+\clearpage
 \bibliographystyle{plainurl}
 \bibliography{refs}
 \end{document}

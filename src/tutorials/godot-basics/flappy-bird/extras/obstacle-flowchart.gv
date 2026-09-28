@@ -1,0 +1,16 @@
+digraph G {
+	node [shape=rect]
+	graph [layout=dot rankdir=LR dpi=250]
+
+	spawn [label="Spawn [instantiate]"]
+	move [label="Move [position.x -= N]"]
+  check [label="Check [if position.x < -100]"]
+  despawn [label="Despawn [free]"]
+
+  spawn -> move
+  move -> check
+  check:e -> move:ne [label="false"]
+  check -> despawn [label="true"]
+
+  { rank=same; move; check; }
+}
