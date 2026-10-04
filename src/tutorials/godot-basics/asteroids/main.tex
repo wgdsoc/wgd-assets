@@ -1,0 +1,55 @@
+\documentclass[14pt]{extarticle}
+\input{../common/preamble.tex}
+
+\usepackage{parskip}
+\usepackage{pdfpages}
+
+\graphicspath{{../../../../lfs/tutorials/godot-basics/common/}{../../../../lfs/tutorials/godot-basics/asteroids/}}
+\usepackage[font=small,labelfont=bf]{caption}
+\setlength{\fboxrule}{1pt}
+
+\newtbox{callout-warning}{orange}
+\newtbox{callout-note}{black}
+
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep}
+\setlist[enumerate]{noitemsep}
+
+\newcommand{\prettyref}[2]{[{#1}.\ref{#2}]}
+\newcommand{\encircle}[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+
+
+\begin{document}
+\includepdf[pages=-]{./build/title.pdf}
+
+\section{Origins}
+\subsection*{The Engine}
+The Godot Game Engine was released to the public on the 14\textsuperscript{th} of January 2014, with the ambitious aim ``to become the most amazing game engine the world has ever seen!''\cite{first-public-release-godot} Godot is MIT-licensed; you receive permanent ownership, editing and redistribution rights when you download the engine.
+
+\subsection*{The Game}
+
+\subsection*{Installation}
+There are two main ways to install Godot (with a litany of others including package managers, compilation from source etc.):
+\begin{itemize}
+  \item[--] \emph{Steam} (recommended): convenient, fast and easy to update -- what more is there to want?
+  \item[--] \emph{Godot's Website}: useful when Steam's automatic updates cause problems in big projects.
+\end{itemize}
+While you wait for Godot to install, give yourself a reminder of Flappy Bird's mechanics. There are a few variants of the game out there, play as many as you can find. Ask yourself some questions as you play:
+\begin{itemize}
+  \item[--] Why is the game fun / boring?
+  \item[--] What makes each variant better or worse?
+  \item[--] How does the bird move?
+\end{itemize}
+
+\subsection*{Forwards}
+These questions will be key to designing your own game in the future. Rephrased, they might sound like:
+\begin{itemize}
+  \item[--] Why is your game fun / boring?
+  \item[--] What makes an iteration of your game better or worse?
+  \item[--] Does the core mechanic feel good to use?
+\end{itemize}
+
+\clearpage
+\bibliographystyle{plainurl}
+\bibliography{refs}
+\end{document}

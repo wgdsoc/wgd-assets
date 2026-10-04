@@ -49,6 +49,9 @@ These questions will be key to designing your own game in the future. Rephrased,
   \item[--] Does the core mechanic feel good to use?
 \end{itemize}
 
+\subsection*{Feedback}
+There will be problems in this document; bad wording, poor explanations, moments of syntactic ineptitude (whether in English or GDScript). Please point them out to us in person, on the discord server, or on the website.
+
 \clearpage
 \section{Godot Orientation}
 \subsection*{Projects}
@@ -166,13 +169,13 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 \end{lstlisting}
 
-As you might note once you've run the game a few times, the controls don't exactly match the original's. You can't flap, you can move side-to-side relative to the camera with the arrow keys, and the bird drops rather quickly. It's worth analysing the code line-by-line.
+As you might note once you've run the game a few times, the controls don't exactly match the original's. You can't flap, you can move side-to-side relative to the camera with the arrow keys, and the bird drops rather quickly. It's worth analysing the code line-by-line. Note that all code in \_physics\_process is executed sixty times a second.
 
 The first few lines of code are acceptable. Line \encircle{10} asks if the bird \emph{is not} on the floor. If this statement evaluates to true, then the indented line \encircle{11} is carried out, applying gravity to the bird. These lines are acceptable because the only places we might expect the bird to `land' are the ground or a pipe, which would end the game anyway.
 
-The next lines present the first of our gameplay difficulties. The `jump' requires both that `ui\_accept' (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. The bird should be able to `jump' at any time. To solve this, simply remove the requirement that the CharacterBody2D `is\_on\_floor.'
+The next lines present the first of our gameplay difficulties. The `jump' requires both that ui\_accept (spacebar) has just been pressed \encircle{14}, and that the bird was colliding with the floor at the same time \encircle{15}. This is the expected behaviour of a platformer, but not of flappy bird. The bird should be able to `jump' at any time. To solve this, simply remove the requirement that the CharacterBody2D is\_on\_floor.
 
-To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on `ui\_left' and `ui\_right,' left- and right-arrow.
+To disallow sideways movement, simply remove all code between lines \encircle{18} and \encircle{26} inclusive. These lines apply horizontal velocity based on ui\_left and ui\_right, left- and right-arrow.
 
 \begin{lstlisting}[language=gdscript, label={lst:simplified-controller}, caption=Inputs to suit flappy bird]
 # ---- // SNIP // ---- #
@@ -194,7 +197,7 @@ Delta is how much time has passed since \_physics\_process was last called. On l
 \end{callout-note}
 
 \subsection*{Parameters}
-There are two parameters which define the movement of the bird. They are `Default Gravity,' and `JUMP\_VELOCITY.' Adjust jumping in your code, and the gravity parameter in Project $\rightarrow$ Project Settings $\rightarrow$ search `gravity.' Test how these affect each other, optimise them as you wish for fun gameplay!
+There are two parameters which define the movement of the bird. They are Default Gravity and JUMP\_VELOCITY. Adjust jumping in your code, and the gravity parameter in Project $\rightarrow$ Project Settings $\rightarrow$ search `gravity.' Test how these affect each other, optimise them as you wish for fun gameplay!
 
 \clearpage
 \section{Obstacles}
@@ -233,11 +236,11 @@ Create a new scene with a simple Node2D as the root. The viewport is the purple 
 
 \textimage{filesystem-birdscene}{0.6\textwidth}{See bird.tscn in the FileSystem}{fig:filesystem-birdscene}
 
-Add in the obstacles, ... and nothing moves. But what should move? This is an interesting question; think about it for yourself.
+Add the obstacles to the main scene, ... and nothing moves. But what should move? This is an interesting question; think about it for yourself.
 
 \clearpage
 \subsection*{Movement}
-The bird seems obvious, right? Wrong. If the player and camera move rightwards, and the obstacles are static, we need to write movement code for both. Instead, we can just move the obstacles left. Thus, like a conveyor belt across the screen, we add and remove them at both ends. See \prettyref{fig}{fig:obstacle-flowchart} for a more detailed plan.
+The bird seems obvious, right? If you thought so, don't worry, you've fallen for a classic game design trap. If the player and camera move rightwards, and the obstacles are static, we need to write movement code for both. Instead, we can just move the obstacles left. Thus, like a conveyor belt across the screen, we add and remove them at both ends. See \prettyref{fig}{fig:obstacle-flowchart} for a more detailed plan. Always keep in mind that an intuitive real-world answer may not provide a better programming solution.
 
 \textimage[]{obstacle-flowchart}{\textwidth}{A logic flowchart for obstacle behaviour}{fig:obstacle-flowchart}
 
@@ -265,7 +268,117 @@ func _physics_process(delta: float) -> void:
 
 Line \encircle{8} does the check as per the flowchart. Lines \encircle{9} and \encircle{10} are indented and thus carried out if the query returns true. Line \encircle{9} prints a message to the console, which pops up below the editor viewport when you run the game. \encircle{12} runs every physics tick and tells the AnimatableBody2D to move\_and\_collide at SPEED. Drag and drop a couple of obstacles into the main scene. The game should work!
 
-There's just one thing left: 
+\subsection*{To Infinity}
+Unfortunately the game only works for a little while; you eventually run out of obstacles. Also, you can't really lose. Since we've just fixed up obstacle movement, we can sort out obstacle generation. Delete the obstacles you put down as placeholders.
+
+Every obstacle should be spawned on the right and should start entirely off-screen. This means we need one final script to place the obstacles appropriately. Return to the main scene and create a new script on the root node.
+
+To instantiate an obstacle, the main script must contain a reference to the obstacle scene. Godot has a neat trick to automate this. Drag obstacle.tscn (in the bottom-left FileSystem) into the template script on line three. Before you drop it, hold down ctrl+shift (cmd+shift on macOS). Godot does the rest!
+
+\begin{lstlisting}[language=gdscript, label={lst:obstacle-preload}, caption=Preloading the obstacle]
+extends Node2D
+
+const OBSTACLE = preload("res://obstacle.tscn")
+\end{lstlisting}
+
+Preload takes in a file path and provides `OBSTACLE' with a reference which can be accessed at any point later. The `const' keyword tells Godot that this variable will never change.
+
+\begin{callout-note}{`Preloading' vs. `loading'}
+A note to more experienced programmers: Godot's preload function is executed at compile time. The load function is executed at runtime. This is a typical storage-speed trade-off.
+\end{callout-note}
+
+There is no need to do anything in the \_ready function (for now). This time, we have a use for process. Every few seconds, a new obstacle should spawn. Consider how you might go about this. Read through the documentation on \href{https://docs.godotengine.org/en/stable/tutorials/scripting/nodes_and_scene_instances.html}{instantiation and children} for more details. If you feel confident, try it out yourself. My code is below.
+
+\clearpage
+\begin{lstlisting}[language=gdscript, label={lst:obstacle-preload}, caption=Preloading the obstacle]
+const OBSTACLE = preload("res://obstacle.tscn")
+
+var await_next_obstacle: float = 0.0
+
+func _process(delta: float) -> void:
+	await_next_obstacle -= delta
+	
+	if await_next_obstacle < 0.0:
+		var next_obstacle: Node2D = OBSTACLE.instantiate()
+		next_obstacle.position.x = 1300
+		next_obstacle.position.y = 324
+		add_child(next_obstacle)
+		
+		await_next_obstacle = 4.0
+\end{lstlisting}
+
+The keystone of this code is await\_next\_obstacle, a timer for introducing obstacles. The `var' keyword tells Godot to expect that this property will be changed. This variable is set once at the start of the game at 0.0, line \encircle{3}. Then, every game-tick (\_process execution \encircle{5}) await\_next\_obstacle is reduced by the time since the last game-tick \encircle{6}. If it is less than zero \encircle{8}, the obstacle is setup \encircle{9}, placed \encircle{10} \encircle{11} and added to the scene \encircle{12}. The timer is reset to 4.0 seconds.
+
+Mess around with the variables and properties across all three scripts and nodes. The numbers that I have assigned result in plodding gameplay -- find ones that provide the kind of game you want. There are just two mechanics to go.
+
+\subsection*{Randomness}
+As it stands, the game is a little monotonous. The vertical position of the obstacles ought to vary randomly over time. Random obstacle placement can be achieved with Godot's \href{https://docs.godotengine.org/en/stable/classes/class_randomnumbergenerator.html}{RandomNumberGenerator}. Check out the documentation and see if you can manage it yourself. Below, as always, is my code.
+
+\clearpage
+\begin{lstlisting}[language=gdscript, label={lst:obstacle-preload}, caption=Preloading the obstacle]
+var rng = RandomNumberGenerator.new()
+
+func _ready() -> void:
+	rng.randomize()
+
+func _process(delta: float) -> void:
+	await_next_obstacle -= delta
+	
+	if await_next_obstacle < 0.0:
+    # ---- // SNIP // ---- #
+
+		next_obstacle.position.y = 324
+                    + rng.randf_range(-128, 128)
+
+    # ---- // SNIP // ---- #
+\end{lstlisting}
+
+There are three additions here. First is line \encircle{1}, which tells Godot to cook up some random numbers for us. The single-line \_ready function \encircle{4} ensures that these random numbers are different each time you play the game (look into \href{https://en.wikipedia.org/wiki/Pseudorandomness}{pseudorandomness} for more detail). Line \encircle{13}'s randf\_range takes in two numbers between which the random number is generated.
+
+\clearpage
+\section{Game Over}
+We are all out of mechanics: the game should work... until you hit an obstacle. We need to know when the game ends and we should display a screen afterwards.
+
+\subsection*{Signals}
+So far, all information sent between nodes has gone \emph{down} the scene tree; the main node instructs the obstacles where to start. This time, we need information to travel \emph{up} the tree; the bird should alert the main node when it hits an obstacle. However, nodes should never know who their parents are. Signals allow nodes to fire information up the tree without knowing who might handle or react to their emitting.
+
+We can know when the bird hits an obstacle if it collides with anything. Collision detection occurs in move\_and\_slide: it returns true when a collision has occurred. Below are the lines which need to be changed and added.
+
+\begin{lstlisting}[language=gdscript, label={lst:obstacle-preload}, caption=Preloading the obstacle]
+signal gameover
+
+# ---- // SNIP // ---- #
+
+func _physics_process(delta: float) -> void:
+  # ---- // SNIP // ---- #
+
+	var collision: bool = move_and_slide()
+	if collision:
+		gameover.emit()
+\end{lstlisting}
+
+We need to tell the main node how to detect and react to this signal. Go back to the main scene and ensure the CharacterBody2D (bird) is selected in the scene tree (upper left). Switch from the inspector to the signals tab as in \prettyref{fig}{fig:signals-tab}.
+
+\textimage{signals-tab}{0.6\textwidth}{The CharacterBody2D signals tab}{fig:signals-tab}
+
+Double click the `gameover' signal and connect it to the root node with an appropriate receiver name (e.g., \_on\_gameover). The new function will appear at the bottom of the main node's script. The simplest way to end the game is `get\_tree().quit().' Try out the game!
+
+Congratulations! Flappy bird is functioning. The official tutorial ends here. See the next section for less guided tasks and other ideas for implementation. Thanks for reading!
+
+\clearpage
+\section{And Beyond}
+These extension activities are strictly in order of implementation difficulty (from least to most tricky). I have put some research advice next to each idea:
+
+\begin{enumerate}
+  \item \emph{Sprites for everyone}: Sprite2Ds on every node
+  \item \emph{Game Over screen}: Sprite2Ds, node \href{https://docs.godotengine.org/en/latest/tutorials/scripting/pausing_games.html}{process\_mode}, visibility and queue\_free
+  \item \emph{Flying off the screen}: StaticBody2D node, WorldBoundaryShape2D shape
+  \item \emph{Different obstacle types}: Use other games for inspiration, apply what you've learnt
+  \item \emph{Custom game-over animations}: \href{https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html}{AnimatedSprite2D}, \href{https://docs.godotengine.org/en/stable/classes/class_tween.html}{tween}
+  \item \emph{Earning points}: \href{https://docs.godotengine.org/en/stable/tutorials/ui/index.html}{UI labels}
+  \item \emph{Parallax background}: \href{https://docs.godotengine.org/en/stable/tutorials/2d/2d_parallax.html}{Parallax2D}
+  \item \emph{Menu \& restart screens}: If you've got this far... go it alone!
+\end{enumerate}
 
 \clearpage
 \bibliographystyle{plainurl}
